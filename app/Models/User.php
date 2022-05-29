@@ -38,6 +38,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|User vendors()
  * @method static \Illuminate\Database\Eloquent\Builder|User admins()
+ * @property-read mixed $revenue
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
  */
 class User extends Authenticatable
 {
@@ -55,6 +58,15 @@ class User extends Authenticatable
         'password',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+    ];
+
     public function scopeVendors($query)
     {
         return $query->where('is_admin', 0);
@@ -65,14 +77,15 @@ class User extends Authenticatable
         return $query->where('is_admin', 1);
     }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function getRevenueAttribute()
+    {
+        return $this->orders->sum();
+    }
 
 
 }
