@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVendorEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereZip($value)
+ * @property-read mixed $vendor_revenue
  */
 class Order extends Model
 {
@@ -66,6 +67,12 @@ class Order extends Model
 
     public function getAdminRevenueAttribute()
     {
-        return $this->orderItems->sum(fn(OrderItem $item) => $item->admin_revenue);        
+        return $this->orderItems->sum(fn(OrderItem $item) => $item->admin_revenue);
     }
+
+    public function getVendorRevenueAttribute()
+    {
+        return $this->orderItems->sum(fn(OrderItem $item) => $item->vendor_revenue);
+    }
+
 }

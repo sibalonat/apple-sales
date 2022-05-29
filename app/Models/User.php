@@ -84,7 +84,7 @@ class User extends Authenticatable
 
     public function getRevenueAttribute()
     {
-        return $this->orders->sum();
+        return $this->orders->sum(fn(Order $order) => $order->vendor_revenue);
     }
 
 

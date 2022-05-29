@@ -68,4 +68,16 @@ class ProductController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    // pubf
+    public function frontend()
+    {
+        Product::all();
+    }
+
+    public function backend()
+    {
+        return Product::paginate()
+    }
+
 }
