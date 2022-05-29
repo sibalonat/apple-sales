@@ -39,7 +39,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $adminLogin = $request->path() === '/api/admin/login';
+        $adminLogin = $request->path() === 'api/admin/login';
 
         if ($adminLogin && !$user->is_admin) {
             return response([

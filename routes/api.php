@@ -70,5 +70,6 @@ Route::prefix('vendor')->group(function() {
 
     Route::middleware(['auth:sanctum', 'scope.vendor'])->group(function() {
         Route::get('stats', [StatsController::class, 'index']);
+        Route::get('rankings', [StatsController::class, 'rankings']);
     });
 });
