@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LinkResource;
 use App\Models\Link;
 use App\Models\LinkProduct;
 use Illuminate\Support\Str;
@@ -16,7 +17,8 @@ class LinkController extends Controller
      */
     public function index($id)
     {
-        return Link::whereUserId($id)->get();
+        $links = Link::with('orders')->whereUserId($id)->get();
+        return LinkResource::collection($links);
     }
 
     /**
@@ -42,16 +44,17 @@ class LinkController extends Controller
         return $link;
     }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Models\Link  $link
-    //  * @return \Illuminate\Http\Response
-    //  */
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Link  $link
+     * @return \Illuminate\Http\Response
+     */
     // public function show(Link $link)
-    // {
-    //     //
-    // }
+    public function show($code)
+    {
+        return Link::with('user', 'products')->whereCode($code)->first();
+    }
 
     // /**
     //  * Update the specified resource in storage.
