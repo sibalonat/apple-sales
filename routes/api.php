@@ -63,4 +63,7 @@ Route::prefix('admin')->group(function() {
 
 Route::prefix('vendor')->group(function() {
     common('scope.vendor');
+
+    Route::get('products/frontend', [ProductController::class, 'frontend']);
+    Route::get('products/backend', [ProductController::class, 'backend']);
 });

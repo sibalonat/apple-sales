@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Cache;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,12 +73,18 @@ class ProductController extends Controller
     // pubf
     public function frontend()
     {
-        Product::all();
+        if ($products = Cache::get('products_frontend'))
+        return $products;
+
+        $products = Product::all();
+
+        Cache::set('products_frontend', $products, 30*60);
+        return $products;
     }
 
     public function backend()
     {
-        return Product::paginate()
+        return Product::paginate();
     }
 
 }
