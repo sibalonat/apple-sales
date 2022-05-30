@@ -18,7 +18,10 @@ class DatabaseSeeder extends Seeder
         //     'is_admin' => 0
         // ]);
         $this->call([
-            VendorSeeder::class
+            VendorSeeder::class,
+            ProductSeeder::class,
+            LinkSeeder::class,
+            OrderSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
     }
