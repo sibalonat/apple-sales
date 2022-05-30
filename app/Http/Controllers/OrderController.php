@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCompletedEvent;
+use DB;
 use App\Models\Link;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\OrderItem;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
-use App\Models\OrderItem;
-use DB;
 
 class OrderController extends Controller
 {
@@ -37,7 +39,7 @@ class OrderController extends Controller
             $order->city = $request->input('city');
             $order->country = $request->input('country');
             $order->zip = $request->input('zip');
-
+            $order->transaction_id = Str::random(10);
             $order->save();
 
             foreach ($request->input('products') as $item) {
@@ -53,14 +55,40 @@ class OrderController extends Controller
                 $orderItem->admin_revenue = 0.9 * $product->price * $item['quantity'];
 
                 $orderItem->save();
+
+                // $lineItems[] = [
+                //     'name' => $product->title,
+                //     'description' => $product->description,
+                //     'images' => [
+                //         $product->image
+                //     ],
+                //     'amount' => 100 * $product->price,
+                //     'currency' => 'all',
+                //     'quantity' => $item['quantity']
+                // ];
             }
 
+            // $source =
+
+            // $order->transaction_id = Str::random(10);
+            // $order->save();
+
+            event(new OrderCompletedEvent($order));
+
             DB::commit();
+            return $order->load('orderItems');
         } catch (\Throwable $th) {
             DB::rollBack();
-            abort(500, 'error happened');
+            // abort(500, 'error happened');
+            return response([
+                'error' => $th->getMessage()
+            ]);
         }
 
-        return $order->load('orderItems');
+    }
+
+    public function confirm(Request $request)
+    {
+
     }
 }
